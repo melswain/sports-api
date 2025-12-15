@@ -8,7 +8,7 @@ export default class GetService {
         this.api = new FetchWrapper(this.baseURL);
     }
 
-    async getBiomes({ name, ecosystem_type, climate }) {
+    async getBiomes({ name, ecosystem_type, climate, page}) {
         if (name && (typeof name !== 'string' || !name.trim())) {
             throw new Error('Name must be a string.');
         }
@@ -21,10 +21,16 @@ export default class GetService {
             throw new Error('Climate must be a string.');
         }
 
+        const pageNum = Number(page);
+        if (page && !Number.isFinite(pageNum) || pageNum < 0) {
+            throw new Error('Page must be a non-negative number');
+        }
+
         const params = new URLSearchParams({
             name: name.trim(),
             ecosystem_type: ecosystem_type.trim(),
-            climate: climate.trim()
+            climate: climate.trim(),
+            page: pageNum
         });
 
         const url = `${'http://localhost/ecosight-api/biomes'}?${params.toString()}`;
@@ -45,13 +51,22 @@ export default class GetService {
         }
     }
 
-    async getCountries(id) {
+    async getCountries(id, page) {
         const biome_id = Number(id);
         if (!Number.isInteger(biome_id) || biome_id <= 0) {
             throw new Error('ID must be a positive integer');
         }
 
-        const url = `${'http://localhost/ecosight-api/biomes/'}${biome_id}${'/countries'}`;
+        const pageNum = Number(page);
+        if (page && !Number.isFinite(pageNum) || pageNum < 0) {
+            throw new Error('Page must be a non-negative number');
+        }
+
+        const params = new URLSearchParams({
+            page: pageNum
+        });
+
+        const url = `${'http://localhost/ecosight-api/biomes/'}${biome_id}${'/countries'}?${params.toString()}`;
         console.log(url);
 
         try {

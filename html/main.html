@@ -130,6 +130,47 @@
         max-height: 40px;
         border-radius: 4px;
     }
+
+    #biomes-pagination, #countries-pagination {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+        padding: 10px 0;
+    }
+
+    #biomes-pagination span, #countries-pagination span {
+        margin-right: 12px;
+        font-size: 14px;
+    }
+
+    #biomes-pagination button, #countries-pagination button {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        background: #ffbcd9;
+        color: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.15s, border-color 0.15s;
+    }
+
+    #biomes-pagination button:hover:not(:disabled), #countries-pagination button:hover:not(:disabled) {
+        background: #971b51;
+        border-color: #bbb;
+    }
+
+    #biomes-pagination button:disabled, #countries-pagination button:disabled {
+        background: #eee;
+        color: #999;
+        border-color: #ddd;
+        cursor: not-allowed;
+    }
+
+    #biomes-pagination button:active:not(:disabled), #countries-pagination button:active:not(:disabled) {
+        background: #dcdcdc;
+    }
+
 </style>
 </head>
 <body>
@@ -208,24 +249,6 @@
         </div>
     </div>
 
-    <table id="leagues-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>League</th>
-                <th>Date of First Event</th>
-                <th>Sport</th>
-                <th>Formed Year</th>
-                <th>Gender</th>
-                <th>Country</th>
-                <th>sLogo</th>
-            </tr>
-        </thead>
-        <tbody id="leagues-tbody">
-            <!-- rows inserted by JS -->
-        </tbody>
-    </table>
-
     <table id="biomes-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
         <thead>
             <tr>
@@ -240,6 +263,7 @@
             <!-- rows inserted by JS -->
         </tbody>
     </table>
+    <div id="biomes-pagination" class="pagination"></div>
 
     <table id="countries-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
         <thead>
@@ -252,6 +276,25 @@
             </tr>
         </thead>
         <tbody id="countries-tbody">
+            <!-- rows inserted by JS -->
+        </tbody>
+    </table>
+    <div id="countries-pagination" class="pagination"></div>
+
+    <table id="leagues-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>League</th>
+                <th>Date of First Event</th>
+                <th>Sport</th>
+                <th>Formed Year</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>sLogo</th>
+            </tr>
+        </thead>
+        <tbody id="leagues-tbody">
             <!-- rows inserted by JS -->
         </tbody>
     </table>

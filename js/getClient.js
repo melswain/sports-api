@@ -10,6 +10,9 @@ const biomesTBody = document.querySelector('#biomes-tbody');
 const countriesTBody = document.querySelector('#countries-tbody');
 const leaguesTbody = document.querySelector('#leagues-tbody');
 
+const biomesPagination = document.querySelector('#biomes-pagination');
+const countriesPagination = document.querySelector('#countries-pagination');
+
 function valueToString(v) {
     if (v === null || v === undefined) return '';
     if (typeof v === 'object') return JSON.stringify(v);
@@ -149,42 +152,70 @@ function renderLeaguesTable(tbody, list) {
 if (getBiomesForm) {
     getBiomesForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const data = {
-            name: e.target.filter_name.value,
-            ecosystem_type: e.target.filter_ecosystem.value,
-            climate: e.target.filter_climate.value
-        };
-
-        try {
-            const result = await getService.getBiomes(data);
-            console.log('Get result:', result);
-            renderBiomesTable(biomesTBody, result.data);
-            getBiomesForm.reset();
-        } catch (err) {
-            console.error('Get error:', err);
-            alert(err?.message || 'Get failed');
-        }
+        loadBiomes(1);
     });
+}
+
+async function loadBiomes(page) {
+    const data = {
+        name: getBiomesForm.filter_name.value,
+        ecosystem_type: getBiomesForm.filter_ecosystem.value,
+        climate: getBiomesForm.filter_climate.value,
+        page: page
+    };
+
+    try {
+        const result = await getService.getBiomes(data);
+
+        renderBiomesTable(biomesTBody, result.data);
+        renderPagination(biomesPagination, result.meta, (newPage) => loadBiomes(newPage));
+    } catch (err) {
+        console.error('Get error:', err);
+        alert(err?.message || 'Get failed');
+    }
 }
 
 if (getCountriesForm) {
     getCountriesForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-
-        const id = e.target.biome_id.value;
-
-        try {
-            const result = await getService.getCountries(id);
-            console.log('Get result:', result);
-            renderCountriesTable(countriesTBody, result.data);
-            getCountriesForm.reset();
-        } catch (error) {
-            console.error('Get error:', error);
-            alert(error?.message || 'Get failed');
-        }
+        loadCountries(1);
     });
 }
+
+async function loadCountries(page) {
+    const id = getCountriesForm.biome_id.value;
+
+    try {
+        const result = await getService.getCountries(id, page);
+        console.log('Get result:', result);
+
+        renderCountriesTable(countriesTBody, result.data);
+        renderPagination(countriesPagination, result.meta, (newPage) => loadCountries(newPage))
+        getCountriesForm.reset();
+    } catch (error) {
+        console.error('Get error:', error);
+        alert(error?.message || 'Get failed');
+    }
+}
+
+// if (getCountriesForm) {
+//     getCountriesForm.addEventListener('submit', async (e) => {
+//         e.preventDefault();
+
+//         const id = e.target.biome_id.value;
+//         const page = 1;
+
+//         try {
+//             const result = await getService.getCountries(id, page);
+//             console.log('Get result:', result);
+//             renderCountriesTable(countriesTBody, result.data);
+//             getCountriesForm.reset();
+//         } catch (error) {
+//             console.error('Get error:', error);
+//             alert(error?.message || 'Get failed');
+//         }
+//     });
+// }
 
 if (getSportForm) {
     getSportForm.addEventListener('submit', async (e) => {
@@ -212,4 +243,38 @@ if (getSportForm) {
             alert(err?.message || 'Get failed');
         }
     });
+}
+
+function renderPagination(container, meta = {}, onPage) {
+    if (!container) return;
+    container.innerHTML = '';
+
+    const page = Number(meta.current_page) || 1;
+    const perPage = Number(meta.page_size) || 10;
+    const totalPages = Number(meta.total_pages)|| 1;
+    const totalItems = Number(meta.total) || 0;
+
+    const info = document.createElement('span');
+    info.textContent = `Page ${page} of ${totalPages}`;
+    container.appendChild(info);
+
+    function makeBtn(text, disabled, handler) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = text;
+        btn.disabled = !!disabled;
+        btn.addEventListener('click', handler);
+        return btn;
+    }
+
+    const firstBtn = makeBtn('<< First', page <= 1, () => onPage(1));
+    const prevBtn = makeBtn('< Previous', page <= 1, () => onPage(Math.max(1, page - 1)));
+    const nextBtn = makeBtn('Next >', page >= totalPages, () => onPage(Math.min(totalPages, page + 1)));
+    const lastBtn = makeBtn('Last >>', page >= totalPages, () => onPage(totalPages));
+
+    container.appendChild(firstBtn);
+    container.appendChild(prevBtn);
+
+    container.appendChild(nextBtn);
+    container.appendChild(lastBtn);
 }

@@ -23,7 +23,7 @@
         color: #0a511f;
     }
 
-    .post-container, .delete-container {
+    .post-container, .delete-container, .biomes-container, .countries-biomes-container, .sports-container {
         background: #98fb9854;
         padding: 25px 30px;
         margin: 20px 0;
@@ -62,38 +62,201 @@
     form input[type="submit"]:hover {
         background: #971b51;
     }
+
+    .layout {
+        display: flex;
+        gap: 8vw;
+        width: 100%;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .left-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: #ffffffcc;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        display: none;
+    }
+
+    thead {
+        background: #0a511f;
+        color: white;
+    }
+
+    thead th {
+        padding: 12px;
+        font-weight: 600;
+        text-align: left;
+        font-size: 15px;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #fae6ef;
+    }
+
+    tbody tr:nth-child(odd) {
+        background: #e6fbe654;
+    }
+
+    tbody td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+        color: #333;
+    }
+
+    tbody tr:hover {
+        background: #dfffe0;
+        transition: background 0.2s ease;
+    }
+
+    tbody td img {
+        max-height: 40px;
+        border-radius: 4px;
+    }
 </style>
 </head>
 <body>
-    <h1>Modifying Countries</h1>
+    <div class="layout">
+        <div class="left-column">
+            <h1>Modifying Countries</h1>
 
-    <div class="post-container">
-       <form id="create-form" method="post">
-            <label for="name">Name</label><br>
-            <input type="text" id="name" name="name"><br>
+            <div class="post-container">
+                <form id="create-form" method="post">
+                    <label for="name">Name</label><br>
+                    <input type="text" id="name" name="name"><br>
 
-            <label for="iso_code">ISO Code</label><br>
-            <input type="text" id="iso_code" name="iso_code"><br>
+                    <label for="iso_code">ISO Code</label><br>
+                    <input type="text" id="iso_code" name="iso_code"><br>
 
-            <label for="continent">Continent</label><br>
-            <input type="text" id="continent" name="continent"><br>
+                    <label for="continent">Continent</label><br>
+                    <input type="text" id="continent" name="continent"><br>
 
-            <label for="epi">EPI (Environmental Performance Index)</label><br>
-            <input type="number" id="epi" name="epi"><br>
+                    <label for="epi">EPI (Environmental Performance Index)</label><br>
+                    <input type="number" id="epi" name="epi"><br>
 
-            <input type="submit" value="Create">
-        </form> 
+                    <input type="submit" value="Create">
+                </form> 
+            </div>
+            
+            <div class="delete-container" method="delete">
+                <form id="delete-form">
+                    <label for="id">ID</label><br>
+                    <input type="text" id="id" name="id"><br>
+
+                    <input type="submit" value="Delete">
+                </form>
+            </div>
+        </div>
+
+        <div class="right-column">
+            <h1>Viewing Resources</h1>
+            <div class="biomes-container">
+                <h2>Get Biomes</h2>
+                <form id="get-biomes-form" method="get">
+                    <label for="name">Name</label><br>
+                    <input type="text" id="filter_name" name="filter_name"><br>
+
+                    <label for="ecosystem">Ecosystem Type</label><br>
+                    <input type="text" id="filter_ecosystem" name="filter_ecosystem"><br>
+
+                    <label for="climate">Climate</label><br>
+                    <input type="text" id="filter_climate" name="filter_climate"><br>
+                    <input type="submit" value="Get">
+                </form>
+            </div>
+
+            <div class="countries-biomes-container">
+                <h2>Get Countries by Biomes</h2>
+                <form id="get-countries-form" method="get">
+                    <label for="id">ID</label><br>
+                    <input type="text" id="biome_id" name="id"><br>
+
+                    <input type="submit" value="Get">
+                </form> 
+
+                <div id="get-countries-results" class="results"></div>
+            </div>
+
+            <div class="sports-container">
+                <h2>Get Sports</h2>
+                <form id="get-sports-form" method="get">
+                    <label for="sport">Sport</label><br>
+                    <input type="text" id="filter_sport" name="filter_sport"><br>
+
+                    <label for="country">Country</label><br>
+                    <input type="text" id="filter_country" name="filter_country"><br>
+                    <input type="submit" value="Get">
+                </form>
+            </div>
+        </div>
     </div>
-    
-    <div class="delete-container" method="delete">
-        <form id="delete-form">
-            <label for="id">ID</label><br>
-            <input type="text" id="id" name="id"><br>
 
-            <input type="submit" value="Delete">
-        </form>
-    </div>
+    <table id="leagues-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>League</th>
+                <th>Date of First Event</th>
+                <th>Sport</th>
+                <th>Formed Year</th>
+                <th>Gender</th>
+                <th>Country</th>
+                <th>sLogo</th>
+            </tr>
+        </thead>
+        <tbody id="leagues-tbody">
+            <!-- rows inserted by JS -->
+        </tbody>
+    </table>
+
+    <table id="biomes-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Ecosystem Type</th>
+                <th>Climate</th>
+                <th>Vegetation</th>
+            </tr>
+        </thead>
+        <tbody id="biomes-tbody">
+            <!-- rows inserted by JS -->
+        </tbody>
+    </table>
+
+    <table id="countries-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>ISO Code</th>
+                <th>Continent</th>
+                <th>EPI</th>
+            </tr>
+        </thead>
+        <tbody id="countries-tbody">
+            <!-- rows inserted by JS -->
+        </tbody>
+    </table>
     
     <script type="module" src="../js/countryClient.js"></script>
+    <script type="module" src="../js/getClient.js"></script>
 </body>
 </html>

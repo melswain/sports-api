@@ -70,16 +70,4 @@ export default class CountryService {
             throw error;
         }
     }
-    
-    async fetchCountries() {
-        try {
-            const data = await this.api.sendRequest(this.api.baseURL, {
-                method: 'GET',
-                headers: { 'Content-Type': 'application/json' }
-            });
-            return data;
-        } catch (error) {
-            throw error;
-        }
-    }
 }

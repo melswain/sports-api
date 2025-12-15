@@ -2,11 +2,14 @@
 // httpError.js
 
 export class HttpError extends Error {
-  constructor(status, statusText, body = '') {
-    super(`HTTP Error ${status}: ${statusText}${body ? `\n${body}` : ''}`);
-    this.name = 'HttpError';
-    this.status = status;
-    this.statusText = statusText;
-    this.body = body;
-  }
+    constructor(message, code = 'EHTTPERROR', details) {
+        super(message);
+        this.name = this.constructor.name;
+        this.code = code;
+        this.details = details;
+
+        if (Error.captureStackTrace) {
+            Error.captureStackTrace(this, this.constructor);
+        }
+    }
 }

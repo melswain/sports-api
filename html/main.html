@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="Assignment 2" content="width=device-width, initial-scale=1.0">
+    <title>Assignment 2</title>
+</head>
+<body>
+    <h1>Modifying Countries</h1>
+
+    <div class="post-container">
+       <form action="/countries" method="post">
+            <label for="name">Name</label><br>
+            <input type="text" id="name" name="name"><br>
+
+            <label for="iso_code">ISO Code</label><br>
+            <input type="text" id="iso_code" name="iso_code"><br>
+
+            <label for="continent">Continent</label><br>
+            <input type="text" id="continent" name="continent"><br>
+
+            <label for="epi">EPI (Environmental Performance Index)</label><br>
+            <input type="number" id="epi" name="epi"><br>
+
+            <input type="submit" value="Create">
+        </form> 
+    </div>
+    
+    <div class="delete-container" method="delete">
+        <form action="/countries">
+            <label for="id">ID</label><br>
+            <input type="text" id="id" name="id"><br>
+
+            <input type="submit" value="Delete">
+        </form>
+    </div>
+    
+</body>
+</html>

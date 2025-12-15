@@ -1,5 +1,5 @@
 // fetchWrapper.js
-import { HTTPError } from './Errors/httpError.js';
+import { HttpError } from './Errors/httpError.js';
 import { NetworkError } from './Errors/networkError.js';
 
 export default class FetchWrapper {
@@ -8,6 +8,8 @@ export default class FetchWrapper {
     }
 
     async sendRequest(uri, options = {}) {
+        console.log(this.baseURL);
+        console.log(uri);
         //* Default options to apply to every request.
         const defaultOptions = {
             method: 'GET',

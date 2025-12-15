@@ -4,12 +4,71 @@
     <meta charset="UTF-8">
     <meta name="Assignment 2" content="width=device-width, initial-scale=1.0">
     <title>Assignment 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=BBH+Sans+Bogle&family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Barriecito&display=swap" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='checkout_style.css') }}"> -->
+
+    <style>
+    body {
+        font-family: 'Barlow', sans-serif;
+        background: #ffe1ee;
+        margin: 0;
+        padding: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    h1 {
+        margin-bottom: 30px;
+        color: #0a511f;
+    }
+
+    .post-container, .delete-container {
+        background: #98fb9854;
+        padding: 25px 30px;
+        margin: 20px 0;
+        width: 350px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    form label {
+        font-weight: bold;
+        color: #118032;
+    }
+
+    form input[type="text"],
+    form input[type="number"] {
+        width: 94%;
+        padding: 10px;
+        margin: 8px 0 15px 0;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    form input[type="submit"] {
+        width: 100%;
+        padding: 12px;
+        background: #ffbcd9;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    form input[type="submit"]:hover {
+        background: #971b51;
+    }
+</style>
 </head>
 <body>
     <h1>Modifying Countries</h1>
 
     <div class="post-container">
-       <form action="/countries" method="post">
+       <form id="create-form" method="post">
             <label for="name">Name</label><br>
             <input type="text" id="name" name="name"><br>
 
@@ -27,7 +86,7 @@
     </div>
     
     <div class="delete-container" method="delete">
-        <form action="/countries">
+        <form id="delete-form">
             <label for="id">ID</label><br>
             <input type="text" id="id" name="id"><br>
 
@@ -35,5 +94,6 @@
         </form>
     </div>
     
+    <script type="module" src="../js/countryClient.js"></script>
 </body>
 </html>

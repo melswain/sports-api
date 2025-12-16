@@ -8,6 +8,11 @@ export default class CountryService {
         this.api = new FetchWrapper(this.baseURL);
     }
 
+    /**
+     * Verifies input and creates a country in the ecosight-api countries table using the fetch wrapper
+     * @param {object} param0 the filters to be applied to the query
+     * @returns the json fetched result of the query
+     */
     async createCountry({ name, iso_code, continent, epi }) {
         if (!name || typeof name !== 'string' || !name.trim()) {
             throw new Error('Name is required');
@@ -51,6 +56,11 @@ export default class CountryService {
         }
     }
 
+    /**
+     * Verifies input and deletes a country from the ecosight-api countries table using the fetch wrapper
+     * @param {int} id the id of the country to delete
+     * @returns the json fetched result of the query
+     */
     async deleteCountry(id) {
         const country_id = Number(id);
         if (!Number.isInteger(country_id) || country_id <= 0) {

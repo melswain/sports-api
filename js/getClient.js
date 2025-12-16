@@ -13,12 +13,25 @@ const leaguesTbody = document.querySelector('#leagues-tbody');
 const biomesPagination = document.querySelector('#biomes-pagination');
 const buttonsPagination = document.querySelector('#buttons-pagination');
 
+/* ----- TABLE DISPLAY ----- */
+
+/**
+ * Turns an object into a string html display
+ * @param {object} v object to change
+ * @returns string value of the object
+ */
 function valueToString(v) {
     if (v === null || v === undefined) return '';
     if (typeof v === 'object') return JSON.stringify(v);
     return String(v);
 }
 
+/**
+ * Renders the HTML biomes table
+ * @param {HTMLElement} tbody the tbody element to add to 
+ * @param {*} list queried items to display
+ * @returns 
+ */
 function renderBiomesTable(tbody, list) {
     if (!tbody) return;
     const table = document.getElementById("biomes-table");
@@ -57,6 +70,12 @@ function renderBiomesTable(tbody, list) {
     });
 }
 
+/**
+ * Renders the HTML mouse buttons table
+ * @param {HTMLElement} tbody the tbody element to add to
+ * @param {*} list queried items to display
+ * @returns 
+ */
 function renderButtonsTable(tbody, list) {
     if (!tbody) return;
     const table = document.getElementById("buttons-table");
@@ -94,6 +113,12 @@ function renderButtonsTable(tbody, list) {
     });
 }
 
+/**
+ * Renders the HTML sports leagues table
+ * @param {HTMLElement} tbody the tbody element to add to
+ * @param {*} list queried items to display
+ * @returns 
+ */
 function renderLeaguesTable(tbody, list) {
     if (!tbody) return;
     const table = document.getElementById("leagues-table");
@@ -148,6 +173,11 @@ function renderLeaguesTable(tbody, list) {
     });
 }
 
+/* ----- FORM COLLECTION ----- */
+
+/**
+ * Triggers biome fetching on form submission
+ */
 if (getBiomesForm) {
     getBiomesForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -155,6 +185,11 @@ if (getBiomesForm) {
     });
 }
 
+/**
+ * Sends database query to load biomes
+ * Deals with name, ecosystem_type, and climate query parameter filters
+ * @param {*} page the current paginated page to be displayed/queried
+ */
 async function loadBiomes(page) {
     const data = {
         name: getBiomesForm.filter_name.value,
@@ -176,6 +211,9 @@ async function loadBiomes(page) {
     }
 }
 
+/**
+ * Triggers mouse buttons fetching on form submission
+ */
 if (getButtonsForm) {
     getButtonsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -183,6 +221,11 @@ if (getButtonsForm) {
     });
 }
 
+/**
+ * Sends database query to load mouse buttons
+ * Deals with mouse id query parameter
+ * @param {*} page the current paginated page to be displayed/queried
+ */
 async function loadButtons(page) {
     const id = getButtonsForm.mouse_id.value;
 
@@ -200,6 +243,10 @@ async function loadButtons(page) {
     }
 }
 
+/**
+ * Triggers sports leagues fetching on form submission
+ * Deals with sport and country filters
+ */
 if (getSportForm) {
     getSportForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -232,6 +279,15 @@ if (getSportForm) {
     });
 }
 
+/* ----- PAGINATION ----- */
+
+/**
+ * Adds pagination (buttons and functionality) to tables
+ * @param {HTMLDivElement} container the div element to add to
+ * @param {array} meta the meta information of json queries
+ * @param {function} onPage the operation to be performed for page changing
+ * @returns 
+ */
 function renderPagination(container, meta = {}, onPage) {
     if (!container) return;
     container.innerHTML = '';
@@ -264,6 +320,15 @@ function renderPagination(container, meta = {}, onPage) {
     container.appendChild(lastBtn);
 }
 
+/* ----- BOOTSTRAP ALERTS ----- */
+
+/**
+ * Displays an error or a success message
+ * @param {CSSStyleRule} type the alert type (danger or success) for the message
+ * @param {string} message the message to be displayed
+ * @param {HTMLDivElement} thing the div name where to add the message
+ * @returns 
+ */
 function showAlert(type, message, thing) {
     const container = document.getElementById(`${thing}-alert`);
     if (!container) return;
@@ -276,16 +341,21 @@ function showAlert(type, message, thing) {
     `;
 }
 
-function extractApiMessage(err) {
+/**
+ * Extracts the specific error message from an ecosight-api error message
+ * @param {string} error string from which to extract the message
+ * @returns the parsed message
+ */
+function extractApiMessage(error) {
     try {
-        const jsonStart = err.message.indexOf('{');
-        if (jsonStart === -1) return err.message;
+        const jsonStart = error.message.indexOf('{');
+        if (jsonStart === -1) return error.message;
 
-        const jsonText = err.message.slice(jsonStart);
+        const jsonText = error.message.slice(jsonStart);
         const parsed = JSON.parse(jsonText);
 
         return parsed.message;
     } catch {
-        return err.message;
+        return error.message;
     }
 }

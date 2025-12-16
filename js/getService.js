@@ -8,6 +8,11 @@ export default class GetService {
         this.api = new FetchWrapper(this.baseURL);
     }
 
+    /**
+     * Verifies input and returns data from the ecosight-api biomes table using the fetch wrapper
+     * @param {object} param0 the filters to be applied to the query
+     * @returns the json fetched result of the query
+     */
     async getBiomes({ name, ecosystem_type, climate, page}) {
         if (name && (typeof name !== 'string' || !name.trim())) {
             throw new Error('Name must be a string.');
@@ -51,6 +56,12 @@ export default class GetService {
         }
     }
 
+    /**
+     * Verifies input and returns data from the km-api buttons table by the mouse id using the fetch wrapper
+     * @param {*} id the mouse id of the buttons to be fetched
+     * @param {*} page the current page of the values to be fetched
+     * @returns the json fetched result of the query
+     */
     async getButtons(id, page) {
         const mouse_id = Number(id);
         if (!Number.isInteger(mouse_id) || mouse_id <= 0) {
@@ -82,6 +93,11 @@ export default class GetService {
         }
     }
     
+    /**
+     * Verifies input and returns data from the sportsdb api leagues table using the fetch wrapper
+     * @param {object} param0 the filters to be applied to the query
+     * @returns the json fetched result of the query
+     */
     async getSports({ sport, country }) {
         if (sport && (typeof sport !== 'string' || !sport.trim())) {
             throw new Error('Sport must be a string.');

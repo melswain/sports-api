@@ -3,15 +3,15 @@ import GetService from './getService.js';
 const getService = new GetService();
 
 const getBiomesForm = document.querySelector('#get-biomes-form');
-const getCountriesForm = document.querySelector('#get-countries-form');
+const getButtonsForm = document.querySelector('#get-buttons-form');
 const getSportForm = document.querySelector('#get-sports-form');
 
 const biomesTBody = document.querySelector('#biomes-tbody');
-const countriesTBody = document.querySelector('#countries-tbody');
+const buttonsTBody = document.querySelector('#buttons-tbody');
 const leaguesTbody = document.querySelector('#leagues-tbody');
 
 const biomesPagination = document.querySelector('#biomes-pagination');
-const countriesPagination = document.querySelector('#countries-pagination');
+const buttonsPagination = document.querySelector('#buttons-pagination');
 
 function valueToString(v) {
     if (v === null || v === undefined) return '';
@@ -57,9 +57,9 @@ function renderBiomesTable(tbody, list) {
     });
 }
 
-function renderCountriesTable(tbody, list) {
+function renderButtonsTable(tbody, list) {
     if (!tbody) return;
-    const table = document.getElementById("countries-table");
+    const table = document.getElementById("buttons-table");
     tbody.innerHTML = '';
 
     if (!list.length) {
@@ -77,11 +77,10 @@ function renderCountriesTable(tbody, list) {
         const tr = document.createElement('tr');
 
         const cols = [
-            valueToString(item.country_id),
+            valueToString(item.button_id),
+            valueToString(item.mouse_id),
             valueToString(item.name),
-            valueToString(item.iso_code),
-            valueToString(item.continent),
-            valueToString(item.epi)
+            valueToString(item.programmable)
         ];
 
         cols.forEach((c, i) => {
@@ -177,28 +176,27 @@ async function loadBiomes(page) {
     }
 }
 
-if (getCountriesForm) {
-    getCountriesForm.addEventListener('submit', async (e) => {
+if (getButtonsForm) {
+    getButtonsForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        loadCountries(1);
+        loadButtons(1);
     });
 }
 
-async function loadCountries(page) {
-    const id = getCountriesForm.biome_id.value;
+async function loadButtons(page) {
+    const id = getButtonsForm.mouse_id.value;
 
     try {
-        const result = await getService.getCountries(id, page);
+        const result = await getService.getButtons(id, page);
         console.log('Get result:', result);
 
-        showAlert('success', 'Countries have loaded successfully. Scroll down to see them!', 'countries');
+        showAlert('success', 'Buttons have loaded successfully. Scroll down to see them!', 'buttons');
 
-        renderCountriesTable(countriesTBody, result.data);
-        renderPagination(countriesPagination, result.meta, (newPage) => loadCountries(newPage))
-        getCountriesForm.reset();
+        renderButtonsTable(buttonsTBody, result.data);
+        renderPagination(buttonsPagination, result.meta, (newPage) => loadButtons(newPage));
     } catch (error) {
         console.error('Get error:', error);
-        showAlert('danger', `Failed to load countries. ${extractApiMessage(error)}`, 'countries');
+        showAlert('danger', `Failed to load buttons. ${extractApiMessage(error)}`, 'buttons');
     }
 }
 
@@ -239,9 +237,7 @@ function renderPagination(container, meta = {}, onPage) {
     container.innerHTML = '';
 
     const page = Number(meta.current_page) || 1;
-    const perPage = Number(meta.page_size) || 10;
     const totalPages = Number(meta.total_pages)|| 1;
-    const totalItems = Number(meta.total) || 0;
 
     const info = document.createElement('span');
     info.textContent = `Page ${page} of ${totalPages}`;

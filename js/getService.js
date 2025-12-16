@@ -51,9 +51,9 @@ export default class GetService {
         }
     }
 
-    async getCountries(id, page) {
-        const biome_id = Number(id);
-        if (!Number.isInteger(biome_id) || biome_id <= 0) {
+    async getButtons(id, page) {
+        const mouse_id = Number(id);
+        if (!Number.isInteger(mouse_id) || mouse_id <= 0) {
             throw new Error('ID must be a positive integer');
         }
 
@@ -66,7 +66,7 @@ export default class GetService {
             page: pageNum
         });
 
-        const url = `${'http://localhost/ecosight-api/biomes/'}${biome_id}${'/countries'}?${params.toString()}`;
+        const url = `${'http://localhost/km-api/mice/'}${mouse_id}${'/buttons'}?${params.toString()}`;
         console.log(url);
 
         try {

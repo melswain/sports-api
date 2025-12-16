@@ -25,7 +25,7 @@
         color: #0a511f;
     }
 
-    .post-container, .delete-container, .biomes-container, .countries-biomes-container, .sports-container {
+    .post-container, .delete-container, .biomes-container, .buttons-mice-container, .sports-container {
         background: #98fb9854;
         padding: 25px 30px;
         margin: 20px 0;
@@ -133,7 +133,7 @@
         border-radius: 4px;
     }
 
-    #biomes-pagination, #countries-pagination {
+    #biomes-pagination, #buttons-pagination {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -141,12 +141,12 @@
         padding: 10px 0;
     }
 
-    #biomes-pagination span, #countries-pagination span {
+    #biomes-pagination span, #buttons-pagination span {
         margin-right: 12px;
         font-size: 14px;
     }
 
-    #biomes-pagination button, #countries-pagination button {
+    #biomes-pagination button, #buttons-pagination button {
         padding: 6px 12px;
         border: 1px solid #ccc;
         background: #ffbcd9;
@@ -157,19 +157,19 @@
         transition: background 0.15s, border-color 0.15s;
     }
 
-    #biomes-pagination button:hover:not(:disabled), #countries-pagination button:hover:not(:disabled) {
+    #biomes-pagination button:hover:not(:disabled), #buttons-pagination button:hover:not(:disabled) {
         background: #971b51;
         border-color: #bbb;
     }
 
-    #biomes-pagination button:disabled, #countries-pagination button:disabled {
+    #biomes-pagination button:disabled, #buttons-pagination button:disabled {
         background: #eee;
         color: #999;
         border-color: #ddd;
         cursor: not-allowed;
     }
 
-    #biomes-pagination button:active:not(:disabled), #countries-pagination button:active:not(:disabled) {
+    #biomes-pagination button:active:not(:disabled), #buttons-pagination button:active:not(:disabled) {
         background: #dcdcdc;
     }
 </style>
@@ -230,17 +230,15 @@
                 </form>
             </div>
 
-            <div class="countries-biomes-container">
-                <h2>Get Countries by Biomes</h2>
-                <div id="countries-alert" class="mt-2"></div>
-                <form id="get-countries-form" method="get">
-                    <label for="id">ID</label><br>
-                    <input type="text" id="biome_id" name="id"><br>
+            <div class="buttons-mice-container">
+                <h2>Get Buttons by Mice</h2>
+                <div id="buttons-alert" class="mt-2"></div>
+                <form id="get-buttons-form" method="get">
+                    <label for="id">Mouse ID</label><br>
+                    <input type="text" id="mouse_id" name="id"><br>
 
                     <input type="submit" value="Get">
-                </form> 
-
-                <div id="get-countries-results" class="results"></div>
+                </form>
             </div>
 
             <div class="sports-container">
@@ -258,7 +256,7 @@
         </div>
     </div>
 
-    <table id="biomes-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+    <table id="biomes-table">
         <thead>
             <tr>
                 <th>ID</th>
@@ -274,23 +272,22 @@
     </table>
     <div id="biomes-pagination" class="pagination"></div>
 
-    <table id="countries-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+    <table id="buttons-table">
         <thead>
             <tr>
-                <th>ID</th>
+                <th>Button ID</th>
+                <th>Mouse ID</th>
                 <th>Name</th>
-                <th>ISO Code</th>
-                <th>Continent</th>
-                <th>EPI</th>
+                <th>Programmable</th>
             </tr>
         </thead>
-        <tbody id="countries-tbody">
+        <tbody id="buttons-tbody">
             <!-- rows inserted by JS -->
         </tbody>
     </table>
-    <div id="countries-pagination" class="pagination"></div>
+    <div id="buttons-pagination" class="pagination"></div>
 
-    <table id="leagues-table" style="width:100%; border-collapse:collapse; margin-top:12px;">
+    <table id="leagues-table">
         <thead>
             <tr>
                 <th>ID</th>

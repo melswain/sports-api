@@ -18,11 +18,11 @@ if (createForm) {
         try {
             const result = await countrySvc.createCountry(data);
             console.log('Create result:', result);
-            alert('Country created successfully');
+            showAlert('success', `Successfully created a country.`, 'post');
             createForm.reset();
-        } catch (err) {
-            console.error('Create error:', err);
-            alert(err?.message || 'Create failed');
+        } catch (error) {
+            console.error('Create error:', error);
+            showAlert('danger', `Unable to create country. ${error.message}`, 'post');
         }
     });
 }
@@ -38,11 +38,37 @@ if (deleteForm) {
         try {
             const result = await countrySvc.deleteCountry(id);
             console.log('Delete result:', result);
-            alert('Country deleted successfully');
+            showAlert('success', `Successfully deleted country with ID ${Object.keys(result.deleted)[0]}.`, 'delete');
             deleteForm.reset();
         } catch (error) {
             console.error('Delete error:', error);
-            alert(error?.message || 'Delete failed');
+            showAlert('danger', `Unable to delete country. ${error.message}`, 'delete');
         }
     });
+}
+
+function showAlert(type, message, thing) {
+    const container = document.getElementById(`${thing}-alert`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+}
+
+function extractApiMessage(err) {
+    try {
+        const jsonStart = err.message.indexOf('{');
+        if (jsonStart === -1) return err.message;
+
+        const jsonText = err.message.slice(jsonStart);
+        const parsed = JSON.parse(jsonText);
+
+        return parsed.message;
+    } catch {
+        return err.message;
+    }
 }

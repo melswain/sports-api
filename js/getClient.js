@@ -167,11 +167,13 @@ async function loadBiomes(page) {
     try {
         const result = await getService.getBiomes(data);
 
+        showAlert('success', 'Biomes loaded successfully. Scroll down to see them!', 'biomes');
+
         renderBiomesTable(biomesTBody, result.data);
         renderPagination(biomesPagination, result.meta, (newPage) => loadBiomes(newPage));
-    } catch (err) {
-        console.error('Get error:', err);
-        alert(err?.message || 'Get failed');
+    } catch (error) {
+        console.error('Get error:', error);
+        showAlert('danger', `Failed to load biomes. ${extractApiMessage(error)}`, 'biomes');
     }
 }
 
@@ -189,33 +191,16 @@ async function loadCountries(page) {
         const result = await getService.getCountries(id, page);
         console.log('Get result:', result);
 
+        showAlert('success', 'Countries have loaded successfully. Scroll down to see them!', 'countries');
+
         renderCountriesTable(countriesTBody, result.data);
         renderPagination(countriesPagination, result.meta, (newPage) => loadCountries(newPage))
         getCountriesForm.reset();
     } catch (error) {
         console.error('Get error:', error);
-        alert(error?.message || 'Get failed');
+        showAlert('danger', `Failed to load countries. ${extractApiMessage(error)}`, 'countries');
     }
 }
-
-// if (getCountriesForm) {
-//     getCountriesForm.addEventListener('submit', async (e) => {
-//         e.preventDefault();
-
-//         const id = e.target.biome_id.value;
-//         const page = 1;
-
-//         try {
-//             const result = await getService.getCountries(id, page);
-//             console.log('Get result:', result);
-//             renderCountriesTable(countriesTBody, result.data);
-//             getCountriesForm.reset();
-//         } catch (error) {
-//             console.error('Get error:', error);
-//             alert(error?.message || 'Get failed');
-//         }
-//     });
-// }
 
 if (getSportForm) {
     getSportForm.addEventListener('submit', async (e) => {
@@ -230,17 +215,21 @@ if (getSportForm) {
             const result = await getService.getSports(data);
             console.log('Get result:', result);
             let items = result;
+
             if (result && typeof result === 'object') {
                 if (Array.isArray(result)) items = result;
                 else if (result.leagues) items = result.leagues;
                 else if (result.countries) items = result.countries;
                 else if (result.sports) items = result.sports;
             }
+
+            showAlert('success', 'Leagues have loaded successfully. Scroll down to see them!', 'sports');
+
             renderLeaguesTable(leaguesTbody, items);
             getSportForm.reset();
-        } catch (err) {
-            console.error('Get error:', err);
-            alert(err?.message || 'Get failed');
+        } catch (error) {
+            console.error('Get error:', error);
+            showAlert('danger', `Failed to load leagues. ${extractApiMessage(error)}`, 'sports');
         }
     });
 }
@@ -277,4 +266,30 @@ function renderPagination(container, meta = {}, onPage) {
 
     container.appendChild(nextBtn);
     container.appendChild(lastBtn);
+}
+
+function showAlert(type, message, thing) {
+    const container = document.getElementById(`${thing}-alert`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    `;
+}
+
+function extractApiMessage(err) {
+    try {
+        const jsonStart = err.message.indexOf('{');
+        if (jsonStart === -1) return err.message;
+
+        const jsonText = err.message.slice(jsonStart);
+        const parsed = JSON.parse(jsonText);
+
+        return parsed.message;
+    } catch {
+        return err.message;
+    }
 }
